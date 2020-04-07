@@ -7,10 +7,12 @@ import lombok.SneakyThrows;
 import org.apache.kafka.common.serialization.Serializer;
 import org.springframework.stereotype.Component;
 
-@Component
-@AllArgsConstructor
 public class KafkaSerializer implements Serializer<Event> {
     private final ObjectMapper objectMapper;
+
+    public KafkaSerializer() {
+        this.objectMapper = new ObjectMapper();
+    }
 
     @Override
     @SneakyThrows

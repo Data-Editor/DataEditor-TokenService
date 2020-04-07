@@ -1,0 +1,31 @@
+spring:
+  profiles:
+    active:
+  application:
+    name: token-service
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+
+server:
+  port: 8092
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: "${EUREKA_URI:http://localhost:8101/eureka}"
+    instance:
+      preferIpAddress: true
+
+dataEditor:
+  privateKey: privateKey.pem
+---
+
+
+#
+#spring:
+#  profiles: prod
+#logging:
+#  config: TokenService\\src\\main\\resources\\Log4J2\\Log4j2.xml

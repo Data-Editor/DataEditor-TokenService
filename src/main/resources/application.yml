@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active:
+    active: 
   application:
     name: token-service
   kafka:
@@ -21,11 +21,15 @@ eureka:
 
 dataEditor:
   privateKey: privateKey.pem
+
 ---
 
 
-#
-#spring:
-#  profiles: prod
-#logging:
-#  config: TokenService\\src\\main\\resources\\Log4J2\\Log4j2.xml
+
+spring:
+  profiles: prod
+
+logging:
+  config: TokenService\\src\\main\\resources\\Log4J2\\Log4j2.xml
+
+---

@@ -30,4 +30,4 @@ build/
 ### VS Code ###
 .vscode/
 
-src/main/resources/dataeditor-firebase-adminsdk-y7hcf-e629c93cce.json
+src/main/resources/dataeditor-firebase-adminsdk-*

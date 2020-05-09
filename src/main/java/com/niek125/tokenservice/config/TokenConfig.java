@@ -1,11 +1,11 @@
 package com.niek125.tokenservice.config;
 
-import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
+import java.security.Key;
 
 import static com.niek125.tokenservice.utils.PemUtils.readPrivateKeyFromFile;
 
@@ -15,11 +15,11 @@ public class TokenConfig {
     private String privateKey;
 
     @Bean
-    public Algorithm algorithm() throws IOException {
+    public Key algorithm() throws IOException {
         java.security.Security.addProvider(
                 new org.bouncycastle.jce.provider.BouncyCastleProvider()
         );
 
-        return Algorithm.RSA512(null, readPrivateKeyFromFile(privateKey, "RSA"));
+        return readPrivateKeyFromFile(privateKey, "RSA");
     }
 }

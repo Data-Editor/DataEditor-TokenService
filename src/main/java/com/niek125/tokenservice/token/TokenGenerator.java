@@ -1,31 +1,47 @@
 package com.niek125.tokenservice.token;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import org.jose4j.jws.AlgorithmIdentifiers;
+import org.jose4j.jws.JsonWebSignature;
+import org.jose4j.jwt.JwtClaims;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.UUID;
+import java.security.Key;
 
 @Component
 @AllArgsConstructor
 public class TokenGenerator implements TokenBuilder {
-    private final Algorithm algorithm;
+    private final Key key;
+
+    private JwtClaims getDefaultClaims() {
+        final JwtClaims claims = new JwtClaims();
+        claims.setIssuer("data-editor-token-service");
+        claims.setGeneratedJwtId();
+        claims.setIssuedAtToNow();
+        claims.setExpirationTimeMinutesInTheFuture(60);
+        return claims;
+    }
+
+    private void setExtraClaims(JwtClaims claims, String uid, String username, String pfp, String permissions) {
+        claims.setClaim("uid", uid);
+        claims.setClaim("unm", username);
+        claims.setClaim("pfp", pfp);
+        claims.setClaim("pms", permissions);
+    }
 
     @Override
+    @SneakyThrows
     public String getNewToken(String uid, String username, String pfp, String permissions) {
-        return JWT.create()
-                .withIssuer("data-editor-token-service")
-                .withJWTId(UUID.randomUUID().toString())
-                .withIssuedAt(new Date(System.currentTimeMillis()))
-                .withExpiresAt(new Date(System.currentTimeMillis() + (60 * 60 * 1000)))
-                .withClaim("uid", uid)
-                .withClaim("unm", username)
-                .withClaim("pfp", pfp)
-                .withClaim("pms", permissions)
-                .sign(algorithm);
+        final JwtClaims claims = getDefaultClaims();
+        setExtraClaims(claims, uid, username, pfp, permissions);
+
+        JsonWebSignature signature = new JsonWebSignature();
+        signature.setPayload(claims.toJson());
+        signature.setKey(key);
+        signature.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
+
+        return signature.getCompactSerialization();
     }
 
 }

@@ -21,6 +21,7 @@ eureka:
 
 dataEditor:
   privateKey: privateKey.pem
+  publicKey: publicKey.pem
 
 ---
 
